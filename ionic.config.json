@@ -1,0 +1,7 @@
+{
+  "name": "ScannerAsistencia",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
