@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { MenuController } from '@ionic/angular';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -14,5 +16,19 @@ export class AppComponent {
     { title: 'Spam', url: '/folder/spam', icon: 'warning' },
   ];
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-  constructor() {}
+  constructor(private router: Router, private menu: MenuController) {
+    // Escuchar los eventos de navegación para habilitar/deshabilitar el menú
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        // Deshabilitar el menú en las páginas de login y register
+        if (event.url === '/login' || event.url === '/register' || event.url === '/recover-password') {
+          this.menu.enable(false);  // Deshabilita el menú
+        } else {
+          this.menu.enable(true);  // Habilita el menú para otras páginas
+        }
+      }
+    });
+  }
+
+ 
 }
