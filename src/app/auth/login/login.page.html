@@ -1,13 +1,13 @@
 <ion-content>
   
-  <form class="ion-padding">
+  <form (ngSubmit)="login()"  class="ion-padding">
     <img src="assets/LOGOdUOC.png" alt="Logo de UOC">
     <div class="form-div ion-padding">
       <h1>L O G I N</h1>
       <p>Duoc Uc Sistema de Autenticación</p>
-      <ion-input type="email" label="Email" labelPlacement="floating" placeholder="Ingrese su Email"></ion-input>
+      <ion-input [(ngModel)]="usr.email" name="email" type="email" label="Email" labelPlacement="floating" placeholder="Ingrese su Email"></ion-input>
       <a routerLink="/recover-password">Olvisate la contraseña?</a>
-      <ion-input type="password" label="Contaseña" labelPlacement="floating" placeholder="Ingrese su Contraseña"></ion-input>
+      <ion-input [(ngModel)]="usr.password" name="password" type="password" label="Contaseña" labelPlacement="floating" placeholder="Ingrese su Contraseña"></ion-input>
     </div>
    
     <ion-button type="submit" expand="block" mode="ios">

@@ -1,13 +1,12 @@
 
 <ion-content>
-  <form class="ion-padding">
+  <form (ngSubmit)="registrarUsuario()"  class="ion-padding">
     <div class="form-div ion-padding">
       <h1>R E G I S T R O</h1>
       <p>Registrate con el correo de la institucion</p>
-      <ion-input color="secondary" type="text" label="Nombre" labelPlacement="floating" placeholder="Ingrese su Nombre"></ion-input>
-      <ion-input color="secondary" type="text" label="Apellido" labelPlacement="floating" placeholder="Ingrese su Apellido"></ion-input>
-      <ion-input color="secondary" type="email" label="Email" labelPlacement="floating" placeholder="Ingrese su Email"></ion-input>
-      <ion-input type="password" label="Contaseña" labelPlacement="floating" placeholder="Ingrese su Contraseña"></ion-input>
+      <ion-input [(ngModel)]="usr.usuario" name='usuario' color="secondary" type="text" label="usuario" labelPlacement="floating" placeholder="Ingrese su Usuario"></ion-input>
+      <ion-input [(ngModel)]="usr.email" name='email' color="secondary" type="email" label="Email" labelPlacement="floating" placeholder="Ingrese su Email"></ion-input>
+      <ion-input [(ngModel)]="usr.password" name='password' type="password" label="Contaseña" labelPlacement="floating" placeholder="Ingrese su Contraseña"></ion-input>
       <ion-input type="password" label="Repita la Contaseña" labelPlacement="floating" placeholder="Repita su Contraseña"></ion-input>
     </div>
    
