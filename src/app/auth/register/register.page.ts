@@ -36,7 +36,7 @@ export class RegisterPage implements OnInit {
 
   ngOnInit() { }
 
-   // Método para actualizar la visibilidad del campo de departamento
+   // Metodo para actualizar la visibilidad del campo de departamento
    onRoleChange() {
     this.isProfesor = this.usr.role === 'Profesor';
     if(!this.isProfesor){

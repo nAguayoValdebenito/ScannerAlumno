@@ -8,6 +8,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
 import { HttpClientModule } from '@angular/common/http';
+import { BarcodeScanningModalComponent } from './barcode-scanning-modal.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { HttpClientModule } from '@angular/common/http';
     HomePageRoutingModule,
     HttpClientModule 
   ],
-  declarations: [HomePage]
+  declarations: [HomePage, BarcodeScanningModalComponent]
 })
 export class HomePageModule {}

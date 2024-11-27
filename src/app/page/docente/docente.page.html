@@ -1,13 +1,48 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>docente</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-toolbar>
+  <!-- Botón del sidebar (Menú) -->
+  <ion-buttons slot="start">
+    <ion-menu-button></ion-menu-button>
+  </ion-buttons>
+  <ion-icon slot="start" color="primary" size="large" name="home"></ion-icon>
+  <h1 class="titulo-header">H O M E </h1>
+</ion-toolbar>
+<div class="ion-padding div-avatar">
+  <ion-avatar>
+    <img src="https://media.istockphoto.com/id/649754038/es/foto/hombre-de-la-risa.jpg?s=170667a&w=0&k=20&c=osBj2s2mWpOKRakqLg9Er4qMqOUHB1KPSm0bVXxSSeg=" />
+  </ion-avatar>
+  <div class="nombre-avatar">
+    <h1>Juan Perez</h1>
+    <p>Docente Duoc UC</p>
+  </div>
+</div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">docente</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="weather-container">
+    <div class="weather-circle-wrapper">
+      <!-- Efecto de barras de escaneo -->
+      <div class="scan-bars"></div>
+      
+      <!-- Círculo con información del clima -->
+      <div class="weather-circle">
+        <h2>{{ temperature }}°C</h2>
+        <p>{{ city }}</p>
+      </div>
+    </div>
+    
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage">
+      <p style="color: red; text-align: center;">{{ errorMessage }}</p>
+    </div>
+  </div>
+
+  <!-- Solo se deja el botón de Asignaturas -->
+  <ion-card button (click)="navigateToAsignaturas()">
+    <ion-card-header>
+      <ion-card-title>Asignaturas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Ver Asignaturas 
+      <ion-icon slot="end" class="icon-asistencia" color="success" name="bookmark"></ion-icon>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

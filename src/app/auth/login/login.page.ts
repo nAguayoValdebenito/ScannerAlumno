@@ -27,10 +27,14 @@ export class LoginPage implements OnInit {
   login() {
     this.auths.login(this.usr.email, this.usr.password).then(() => {
       console.log('Usuario logeado');
+
+      // Comprobar el dominio del correo y redirigir
       if (this.usr.email.endsWith('@alumnoduoc.cl')) {
-        console.log('alumno culiao');;
+        console.log('Alumno logeado');
+        this.router.navigate(['/home']);  // Redirige a home.page.html
       } else if (this.usr.email.endsWith('@profesorduoc.cl')) {
-        console.log('docente mamawebo');;
+        console.log('Docente logeado');
+        this.router.navigate(['/docente']);  // Redirige a docente.page.html
       }
     }).catch((e) => {
       console.log('Error al iniciar sesión', e);
