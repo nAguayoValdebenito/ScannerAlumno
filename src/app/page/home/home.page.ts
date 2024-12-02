@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { BarcodeScanningModalComponent } from './barcode-scanning-modal.component';
 import { LensFacing } from '@capacitor-mlkit/barcode-scanning';
+import { Router } from '@angular/router';  // Importar Router para navegación
 
 @Component({
   selector: 'app-home',
@@ -11,52 +12,46 @@ import { LensFacing } from '@capacitor-mlkit/barcode-scanning';
 })
 export class HomePage implements OnInit {
 
-  temperature: number | null = null;  // Almacenará la temperatura
-  city: string = 'concepción, Chile';  // Ciudad predeterminada
-  errorMessage: string = '';  // To store any error messages
-  scanResult: '';
+  temperature: number | null = null;
+  city: string = 'concepción, Chile';
+  errorMessage: string = '';
+  scanResult: string = '';
 
-  constructor(private http: HttpClient, private modalController: ModalController) { }
+  constructor(
+    private http: HttpClient, 
+    private modalController: ModalController,
+    private router: Router  // Inyectamos el Router
+  ) { }
 
   async startScan() {
     const modal = await this.modalController.create({
-    component: BarcodeScanningModalComponent,
-    cssClass: 'barcode-scanning-modal',
-    componentProps: { 
-      formats: [],
-      lensFacing: LensFacing.Back
-     }
+      component: BarcodeScanningModalComponent,
+      cssClass: 'barcode-scanning-modal',
+      componentProps: { 
+        formats: [],
+        lensFacing: LensFacing.Back
+      }
     });
-  
+
     await modal.present();
 
     const { data } = await modal.onWillDismiss();
     
-    if(data){
-      this.scanResult= data?.barcode?.displayValue;
+    if (data) {
+      this.scanResult = data?.barcode?.displayValue;
+      console.log('Código escaneado: ', this.scanResult);
+      
+      // Redirigir a la página de alumno y pasar el scanResult
+      this.router.navigate(['/home'], { queryParams: { scanResult: this.scanResult } });
     }
-  
   }
+
+    // Función que redirige a la página de login
+    logout() {
+      this.router.navigate(['/login']); // Redirige a la página de login
+    }
 
   ngOnInit() {
-    this.getWeather();  // Llamamos a la función para obtener el clima
-  }
 
-  // Función para obtener la temperatura
-  getWeather() {
-    const apiKey = '8eca85a2fbca3c17fc85b92de4bcf7ec';  // Use the Default API key
-    const city = this.city;  // Use the city property from the component
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-
-    this.http.get(url).subscribe(
-      (response: any) => {
-        this.temperature = response.main.temp;  // Extract the temperature from the API response
-        this.errorMessage = '';  // Clear any previous error messages
-      },
-      (error) => {
-        this.errorMessage = 'Could not fetch weather data';  // Display an error message if API call fails
-        console.error(error);  // Log the error to the console
-      }
-    );
   }
 }
