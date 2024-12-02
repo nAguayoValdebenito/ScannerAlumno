@@ -1,13 +1,26 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>docente</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-toolbar>
+  <!-- Botón del sidebar (Menú) -->
+  <ion-buttons slot="start">
+    <ion-menu-button></ion-menu-button>
+  </ion-buttons>
+  <ion-icon slot="start" color="primary" size="large" name="home"></ion-icon>
+  <h1 class="titulo-header">Docente </h1>
+</ion-toolbar>
+<div class="ion-padding div-avatar">
+  <div class="nombre-avatar">
+    <p>Docente Duoc UC</p>
+  </div>
+</div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">docente</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <!-- Solo se deja el botón de Asignaturas -->
+  <ion-card button (click)="navigateToAsignaturas()">
+    <ion-card-header>
+      <ion-card-title>Asignaturas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Ver Asignaturas 
+      <ion-icon slot="end" class="icon-asistencia" color="success" name="bookmark"></ion-icon>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

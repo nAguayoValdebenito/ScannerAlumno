@@ -1,57 +1,23 @@
-
-
 <ion-toolbar>
-  <!-- Botón del sidebar (Menú) -->
-  <ion-buttons slot="start">
-    <ion-menu-button></ion-menu-button>
-  </ion-buttons>
-  <ion-icon slot="start" color="success" size="large" name="checkmark-done"></ion-icon>
-  <h1 class="titulo-header">A S I S T E N C I A</h1>
+  <!-- Título principal -->
+  <h1 class="titulo-header">Asistencia</h1>
 </ion-toolbar>
 
 <ion-content scrollY="true">
-  <!-- Título de Asistencia -->
- 
+  <!-- Botón para volver al home -->
+  <div style="text-align: center; margin: 20px;">
+    <ion-button expand="block" color="primary" (click)="goToHome()">Volver al Home</ion-button>
+  </div>
 
   <!-- Contenedor de tarjetas de asignaturas -->
   <div class="card-container">
-    <ion-card>
+    <ion-card *ngFor="let item of asignaturasList">
       <ion-card-header>
-        <ion-card-subtitle>Programacion Web</ion-card-subtitle>
-        <p>code:550D-05D</p>
+        <ion-card-subtitle>{{ item.asignatura.nombreAsignatura }}</ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
-        Asistencia <h1>50%</h1>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-subtitle>Arquitectura</ion-card-subtitle>
-        <p>code:450D-03D</p>
-      </ion-card-header>
-      <ion-card-content>
-        Asistencia <h1>70%</h1>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-subtitle>Matematica</ion-card-subtitle>
-        <p>code:560D-06D</p>
-      </ion-card-header>
-      <ion-card-content>
-        Asistencia <h1>80%</h1>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-subtitle>Física</ion-card-subtitle>
-        <p>code:540D-04D</p>
-      </ion-card-header>
-      <ion-card-content>
-        Asistencia <h1>90%</h1>
+        Horario: {{ item.asignatura.horarioAsignatura }} <br />
+        Asistencia: {{ item.asistencia }}%
       </ion-card-content>
     </ion-card>
   </div>
