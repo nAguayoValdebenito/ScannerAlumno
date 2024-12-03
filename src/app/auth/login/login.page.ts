@@ -18,7 +18,8 @@ export class LoginPage implements OnInit {
     email: "",
     password: '',
     role: '',
-    departamento: ''
+    asignaturas:[],
+    porcentaje:''
   }
 
   ngOnInit() {

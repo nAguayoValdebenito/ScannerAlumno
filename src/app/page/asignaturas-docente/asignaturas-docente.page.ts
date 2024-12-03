@@ -91,17 +91,11 @@ export class AsignaturasDocentePage implements OnInit {
   // Método para generar el código QR
  generateQRCode(asignaturaId: string) {
   console.log("ID proporcionado:", asignaturaId);
-  this.firebaseService.getAsignaturaById(asignaturaId).subscribe(
-    (asignatura:any) => {
-      const { nombreAsignatura, horarioAsignatura, cuposAsignatura } = asignatura;
-      const qrData = `Asignatura: ${nombreAsignatura}, Horario: ${horarioAsignatura}, Cupos: ${cuposAsignatura}`;
+  const qrData = `id: ${asignaturaId}`;
       this.qrCodeUrl = qrData;
       console.log("Datos del QR:", qrData);
-    },
-    (error) => {
-      console.error("Error al obtener los datos de la asignatura:", error);
-    }
-  );
+ 
+ };
 }
 
-}
+

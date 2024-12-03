@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Inscribirse a Asignaturas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Selecciona las asignaturas</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let asignatura of asignaturasList">
+          <ion-label>{{ asignatura.nombreAsignatura }}</ion-label>
+          <ion-checkbox 
+            slot="start" 
+            [checked]="selectedAsignaturas.includes(asignatura.asignaturaId)" 
+            (ionChange)="toggleAsignatura(asignatura.asignaturaId)">
+          </ion-checkbox>
+        </ion-item>
+      </ion-list>
+
+      <ion-button expand="full" (click)="inscribirse()">Inscribirse</ion-button>
+      <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

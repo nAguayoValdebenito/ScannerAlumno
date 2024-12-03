@@ -4,5 +4,6 @@ export interface Users {
     password:string,
     email:string
     role:string,
-    departamento:string
+    asignaturas: string[],
+    porcentaje:string
 }

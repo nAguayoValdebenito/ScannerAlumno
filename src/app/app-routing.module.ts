@@ -34,7 +34,12 @@ const routes: Routes = [
   {
     path: 'asignaturas-docente',
     loadChildren: () => import('./page/asignaturas-docente/asignaturas-docente.module').then( m => m.AsignaturasDocentePageModule)
+  },
+  {
+    path: 'agregar-asignatura',
+    loadChildren: () => import('./page/agregar-asignatura/agregar-asignatura.module').then( m => m.AgregarAsignaturaPageModule)
   }
+
 
 ];
 

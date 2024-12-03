@@ -25,6 +25,16 @@
     </ion-card-content>
   </ion-card>
 
+  <ion-card button routerLink="/agregar-asignatura">
+    <ion-card-header>
+      <ion-card-title>Asignaturas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Agregar Asignatura 
+      <ion-icon slot="end" class="icon-asistencia" color="success" name="checkmark-done"></ion-icon>
+    </ion-card-content>
+  </ion-card>
+
   <!-- Card para el escaneo de QR -->
   <ion-card class="scan-card">
     <ion-button expand="block" class="scan-button" (click)="startScan()">

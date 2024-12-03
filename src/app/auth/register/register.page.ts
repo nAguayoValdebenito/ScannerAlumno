@@ -19,7 +19,8 @@ export class RegisterPage implements OnInit {
     email: "",
     password: '',
     role: '',        // Nuevo campo para el rol
-    departamento: '' // Nuevo campo para el departamento (solo para Profesor)
+    asignaturas:[],
+    porcentaje:''
   };
 
   asg: Asignaturas = {
@@ -36,13 +37,14 @@ export class RegisterPage implements OnInit {
 
   ngOnInit() { }
 
-   // Metodo para actualizar la visibilidad del campo de departamento
-   onRoleChange() {
-    this.isProfesor = this.usr.role === 'Profesor';
-    if(!this.isProfesor){
-      this.usr.role === 'Alumno';
+  onRoleChange() {
+    if (this.usr.role === 'Profesor') {
+      this.isProfesor = true;
+    } else {
+      this.isProfesor = false;
     }
   }
+  
 
   async register(usuario:any) {
     return await this.firestore.collection('usuarios').add(usuario)
@@ -52,29 +54,57 @@ export class RegisterPage implements OnInit {
     return await this.firestore.collection('asignaturas').add(asignatura)
   }
 
-  async registrarUsuario(){
-    const credencial = await this.AFAuth.createUserWithEmailAndPassword(this.usr.email,this.usr.password)
-    const userId = credencial.user?.uid;
-    const datoUsuario: any = {
-      id: userId,
-      usuario:this.usr.usuario,
-      email:this.usr.email,
-      password:this.usr.password,
-      role:this.usr.role,
-      departamento:this.usr.departamento
+  async registrarUsuario() {
+    try {
+      // Crear usuario en Firebase Authentication
+      const credencial = await this.AFAuth.createUserWithEmailAndPassword(this.usr.email, this.usr.password);
+      
+      const userId = credencial.user?.uid;
+      if (userId) {
+        const datoUsuario: any = {
+          id: userId,
+          usuario: this.usr.usuario,
+          email: this.usr.email,
+          password: this.usr.password, // Mejor no guardar la contraseña en Firestore por seguridad
+          role: this.usr.role,
+          asignaturas: this.usr.asignaturas,
+          porcentaje: this.usr.porcentaje
+        };
+  
+        // Guardar el usuario en Firestore
+        await this.firestore.collection('usuarios').doc(userId).set(datoUsuario);
+        console.log('Usuario registrado exitosamente');
+        // Redirigir al login o al área correspondiente
+        this.router.navigate(['/login']); // o alguna ruta de éxito
+      } else {
+        throw new Error('No se pudo obtener el ID del usuario');
+      }
+    } catch (error) {
+      console.error('Error al registrar usuario:', error);
+      alert('Hubo un problema al registrar el usuario. Intente nuevamente.');
     }
-    await this.register(datoUsuario);
-    console.log('usuario registrado');
   }
-
-  async registroAsignatura(){
-    const datosAsignatura:any={
-      id: this.asg.asignaturaId,
-      nombre: this.asg.nombreAsignatura,
-      horario: this.asg.horarioAsignatura,
-      cupos: this.asg.cuposAsignatura
+  async registroAsignatura() {
+    try {
+      const datosAsignatura: any = {
+        id: this.asg.asignaturaId,
+        nombre: this.asg.nombreAsignatura,
+        horario: this.asg.horarioAsignatura,
+        cupos: this.asg.cuposAsignatura
+      };
+  
+      // Verificar si los campos son válidos antes de registrar la asignatura
+      if (this.asg.nombreAsignatura && this.asg.horarioAsignatura) {
+        await this.regAsignatura(datosAsignatura);
+        console.log('Asignatura registrada');
+      } else {
+        throw new Error('Debe completar todos los campos de la asignatura');
+      }
+    } catch (error) {
+      console.error('Error al registrar la asignatura:', error);
+      alert('Hubo un problema al registrar la asignatura.');
     }
-    await this.regAsignatura(datosAsignatura);
   }
+  
 
 }
