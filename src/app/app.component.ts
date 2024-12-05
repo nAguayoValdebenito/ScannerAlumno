@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 @Component({
@@ -6,16 +6,13 @@ import { MenuController } from '@ionic/angular';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent{
   public appPages = [
-    { title: 'Inbox', url: '/folder/inbox', icon: 'mail' },
-    { title: 'Outbox', url: '/folder/outbox', icon: 'paper-plane' },
-    { title: 'Favorites', url: '/folder/favorites', icon: 'heart' },
-    { title: 'Archived', url: '/folder/archived', icon: 'archive' },
-    { title: 'Trash', url: '/folder/trash', icon: 'trash' },
-    { title: 'Spam', url: '/folder/spam', icon: 'warning' },
+    { title: 'Home', url: '/home', icon: 'home' },
+    { title: 'Asistencia', url: '/alumno', icon: 'school' },
+    { title: 'Asignaturas', url: '/agregar-asignatura', icon: 'book' },
   ];
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+  public labels = ['Scan QR'];
   constructor(private router: Router, private menu: MenuController) {
     // Escuchar los eventos de navegación para habilitar/deshabilitar el menú
     this.router.events.subscribe((event) => {
@@ -28,6 +25,10 @@ export class AppComponent {
         }
       }
     });
+    
+  }
+  logout() {
+    this.router.navigate(['/login']); // Redirige a la página de login
   }
 
  

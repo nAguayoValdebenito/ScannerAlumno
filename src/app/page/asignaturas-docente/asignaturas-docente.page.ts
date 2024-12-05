@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Asignaturas } from 'src/app/interfaces/asignaturas';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { QrCodeService } from 'src/app/services/qrcode.service';
-import { AlertController } from '@ionic/angular'; // Importamos AlertController
+import { AlertController, LoadingController } from '@ionic/angular'; // Importamos LoadingController
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-asignaturas-docente',
@@ -11,28 +12,46 @@ import { AlertController } from '@ionic/angular'; // Importamos AlertController
 })
 export class AsignaturasDocentePage implements OnInit {
 
-  asignatura: Asignaturas = { asignaturaId: Date.now().toString(), nombreAsignatura: '', horarioAsignatura: '', cuposAsignatura: 0 };  // Objeto para el formulario
-  asignaturasList: Asignaturas[] = [];  // Lista de asignaturas obtenidas de Firebase
-  isModalOpen = false;  // Variable para controlar la visibilidad del modal
-  selectedAsignaturaId: string = '';  // ID de la asignatura seleccionada (inicializado vacío)
-  qrCodeUrl: string = '';  // URL del QR generado
+  asignatura: Asignaturas = { asignaturaId: Date.now().toString(), nombreAsignatura: '', horarioAsignatura: '', cuposAsignatura: 0 };
+  asignaturasList: Asignaturas[] = [];
+  isModalOpen = false;
+  selectedAsignaturaId: string = '';
+  qrCodeUrl: string = '';
+  isLoading = true; // Variable para controlar el estado del cargador
 
   constructor(
     private firebaseService: FirebaseService,
     private qrCodeService: QrCodeService,
-    private alertController: AlertController // Inyectamos AlertController
+    private alertController: AlertController,
+    private loadingCtrl: LoadingController, // Inyectamos LoadingController
+    private router: Router
   ) { }
 
-  ngOnInit() {
-    this.loadAsignaturas();  // Cargar las asignaturas al iniciar
+  navigateToHome() {
+    this.router.navigate(['/docente']);
   }
 
-  // Método para abrir el modal
+  async ngOnInit() {
+    // Muestra el LoadingController al iniciar
+    const loading = await this.loadingCtrl.create({
+      spinner: 'crescent',
+      message: 'Cargando asignaturas...',
+    });
+
+    await loading.present();
+
+    // Simula una carga de 2 segundos antes de mostrar el contenido
+    setTimeout(async () => {
+      this.loadAsignaturas(); // Carga las asignaturas
+      this.isLoading = false; // Actualiza el estado
+      await loading.dismiss(); // Oculta el cargador
+    }, 2000);
+  }
+
   openModal() {
     this.isModalOpen = true;
   }
 
-  // Método para cerrar el modal
   closeModal() {
     this.isModalOpen = false;
   }

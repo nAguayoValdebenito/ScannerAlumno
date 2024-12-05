@@ -1,32 +1,33 @@
-<ion-toolbar>
-  <!-- Botón del sidebar (Menú) -->
-  <ion-buttons slot="start">
-    <ion-menu-button></ion-menu-button>
-  </ion-buttons>
-  <ion-icon slot="start" color="primary" size="large" name="home"></ion-icon>
-  <h1 class="titulo-header">Docente </h1>
-</ion-toolbar>
-<div class="ion-padding div-avatar">
-  <div class="nombre-avatar">
-    <p>Docente Duoc UC</p>
-  </div>
-</div>
+<ion-header>
+  <ion-toolbar color="primary">
+    <!-- Botón del sidebar (Menú) -->
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Docente</ion-title>
+    <ion-icon slot="end" color="light" size="large" name="home"></ion-icon>
+  </ion-toolbar>
+</ion-header>
 
-<ion-content>
-    <!-- Botón Cerrar Sesión -->
-<div class="logout-button">
-  <ion-button color="danger" (click)="logout()" fill="clear">
-    Cerrar sesión
-  </ion-button>
-</div>
-  <!-- Solo se deja el botón de Asignaturas -->
-  <ion-card button (click)="navigateToAsignaturas()">
+<ion-content [class.blurred]="isLoading" class="docente-content">
+  <!-- Avatar del Docente -->
+  <div class="ion-padding avatar-section">
+    <div class="avatar">
+      <ion-icon name="person-circle-outline" size="large" color="secondary"></ion-icon>
+    </div>
+    <h2 class="docente-name">Docente Duoc UC</h2>
+  </div>
+
+  <!-- Botón para ver asignaturas -->
+  <ion-card button (click)="navigateToAsignaturas()" class="asignaturas-card">
     <ion-card-header>
       <ion-card-title>Asignaturas</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      Ver Asignaturas 
-      <ion-icon slot="end" class="icon-asistencia" color="success" name="bookmark"></ion-icon>
+      <div class="card-content">
+        Ver Asignaturas
+        <ion-icon slot="end" class="icon-asignaturas" color="success" name="bookmark"></ion-icon>
+      </div>
     </ion-card-content>
   </ion-card>
 </ion-content>

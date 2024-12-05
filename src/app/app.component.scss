@@ -117,3 +117,15 @@ ion-note {
 ion-item.selected {
   --color: var(--ion-color-primary);
 }
+
+ion-menu {
+  --background: #1e1e2f; /* Fondo oscuro */
+  --ion-color-primary: #ffc107; /* Amarillo */
+}
+
+
+
+.logout-button ion-button {
+  margin: auto;
+  width: 90%;
+}

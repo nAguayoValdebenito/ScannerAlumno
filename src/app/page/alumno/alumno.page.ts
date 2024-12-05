@@ -4,6 +4,7 @@ import { Asignaturas } from 'src/app/interfaces/asignaturas';
 import { ActivatedRoute, Router } from '@angular/router';  // Importamos Router para navegación
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Users } from 'src/app/interfaces/users';
+import { LoadingController } from '@ionic/angular'; // Importamos LoadingController
 
 @Component({
   selector: 'app-alumno',
@@ -14,8 +15,18 @@ export class AlumnoPage implements OnInit {
   usuario: Users; // El usuario actual
   asignaturasList: Asignaturas[] = []; // Lista de todas las asignaturas disponibles
   asignaturasFiltradas: Asignaturas[] = [];
+  isLoading: boolean = false; // Estado de carga para manejar el desenfoque
 
-  constructor(private firebaseService: FirebaseService, private AFAuth: AngularFireAuth) {}
+  constructor(
+    private firebaseService: FirebaseService,
+    private AFAuth: AngularFireAuth,
+    private router: Router,
+    private loadingController: LoadingController // Inyectamos LoadingController
+  ) {}
+
+  navigateToHome() {
+    this.router.navigate(['/home']);
+  }
 
   ngOnInit() {
     this.loadUser(); // Cargar datos del usuario
@@ -23,7 +34,10 @@ export class AlumnoPage implements OnInit {
   }
 
   // Cargar el usuario autenticado
-  loadUser() {
+  async loadUser() {
+    this.isLoading = true; // Activar el estado de carga
+    const loading = await this.presentLoading('Cargando usuario...'); // Mostrar loading
+
     this.AFAuth.onAuthStateChanged(user => {
       if (user) {
         // Si el usuario está autenticado, obtenemos sus datos
@@ -33,17 +47,31 @@ export class AlumnoPage implements OnInit {
           this.filterAsignaturas(); // Filtrar asignaturas del usuario
         }).catch(error => {
           console.error('Error al obtener usuario:', error);
+        }).finally(() => {
+          this.dismissLoading(loading); // Ocultar loading después de obtener los datos
+          this.isLoading = false; // Desactivar el estado de carga
         });
       } else {
         console.log('No hay usuario autenticado');
+        this.dismissLoading(loading); // Ocultar loading si no hay usuario
+        this.isLoading = false; // Desactivar el estado de carga
       }
     });
   }
 
   // Cargar todas las asignaturas disponibles
-  loadAsignaturas() {
+  async loadAsignaturas() {
+    this.isLoading = true; // Activar el estado de carga
+    const loading = await this.presentLoading('Cargando asignaturas...'); // Mostrar loading
+
     this.firebaseService.getAsignaturas().subscribe(asignaturas => {
       this.asignaturasList = asignaturas; // Asignar las asignaturas a la lista
+      this.dismissLoading(loading); // Ocultar loading después de obtener las asignaturas
+      this.isLoading = false; // Desactivar el estado de carga
+    }, error => {
+      console.error('Error al cargar asignaturas:', error);
+      this.dismissLoading(loading); // Ocultar loading en caso de error
+      this.isLoading = false; // Desactivar el estado de carga
     });
   }
 
@@ -63,5 +91,21 @@ export class AlumnoPage implements OnInit {
     );
 
     console.log('Asignaturas filtradas:', this.asignaturasFiltradas);
+  }
+
+  // Mostrar Loading
+  async presentLoading(message: string) {
+    const loading = await this.loadingController.create({
+      message: message,
+      spinner: 'circles',  // Estilo del spinner
+      duration: 0 // duración infinita hasta que se oculte manualmente
+    });
+    await loading.present();
+    return loading;
+  }
+
+  // Ocultar Loading
+  async dismissLoading(loading) {
+    await loading.dismiss();
   }
 }

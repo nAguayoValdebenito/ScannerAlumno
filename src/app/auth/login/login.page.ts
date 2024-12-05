@@ -52,11 +52,23 @@ export class LoginPage implements OnInit {
           console.log('Docente logeado');
           this.router.navigate(['/docente']);
         }
+        
+        // Vaciar los campos después de la redirección
+        this.usr.email = '';
+        this.usr.password = '';
       })
       .catch(async (e) => {
         console.error('Error al iniciar sesión', e);
+        
         // Mostrar la alerta si las credenciales son incorrectas
         await this.presentAlert();
+        
+        // Vaciar los campos después del error
+        this.usr.email = '';
+        this.usr.password = '';
       });
   }
+  
+
+  
 }

@@ -1,25 +1,38 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <!-- Botón para abrir el menú -->
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
     <ion-title>Asignaturas Inscritas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <!-- Mostrar mensaje si no hay asignaturas -->
-  <div *ngIf="asignaturasFiltradas.length === 0">
+<ion-content [ngClass]="{'blurred': isLoading}" class="asignaturas-content">
+  <!-- Botón para regresar al Home -->
+  <ion-button expand="block" color="secondary" class="volver-button" (click)="navigateToHome()">
+    <ion-icon name="home" slot="end" ></ion-icon>
+    Volver al Home
+  </ion-button>
+
+  <!-- Mensaje si no hay asignaturas -->
+  <div class="mensaje-vacio" *ngIf="asignaturasFiltradas.length === 0">
+    <ion-icon name="information-circle-outline" size="large" color="medium"></ion-icon>
     <ion-text color="medium">
       <p>No tienes asignaturas inscritas.</p>
     </ion-text>
   </div>
 
-  <!-- Mostrar las asignaturas del usuario -->
+  <!-- Lista de asignaturas -->
   <ion-list *ngIf="asignaturasFiltradas.length > 0">
-    <ion-item *ngFor="let asignatura of asignaturasFiltradas">
-      <ion-label>
-        <h2>{{ asignatura.nombreAsignatura }}</h2>
-        <p>Horario: {{ asignatura.horarioAsignatura }}</p>
-        <p>Cupos: {{ asignatura.cuposAsignatura }}</p>
-      </ion-label>
-    </ion-item>
+    <ion-card *ngFor="let asignatura of asignaturasFiltradas">
+      <ion-card-header>
+        <ion-card-title color="light">{{ asignatura.nombreAsignatura }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Horario:</strong> {{ asignatura.horarioAsignatura }}</p>
+        <p><strong>Cupos:</strong> {{ asignatura.cuposAsignatura }}</p>
+      </ion-card-content>
+    </ion-card>
   </ion-list>
 </ion-content>

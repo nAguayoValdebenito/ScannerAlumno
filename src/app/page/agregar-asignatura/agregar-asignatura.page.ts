@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Asignaturas } from 'src/app/interfaces/asignaturas';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { AlertController } from '@ionic/angular'; // Importamos AlertController
+import { AlertController, LoadingController } from '@ionic/angular'; // Importamos LoadingController
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-agregar-asignatura',
@@ -18,17 +19,25 @@ export class AgregarAsignaturaPage implements OnInit {
   constructor(
     private firebaseService: FirebaseService,
     private afAuth: AngularFireAuth,
-    private alertController: AlertController // Inyectamos AlertController
+    private alertController: AlertController, // Inyectamos AlertController
+    private loadingController: LoadingController, // Inyectamos LoadingController
+    private router: Router,
   ) {}
+
+  navigateToHome() {
+    this.router.navigate(['/home']);
+  }
 
   ngOnInit() {
     this.loadAsignaturas(); // Cargar las asignaturas al iniciar
   }
 
   // Método para cargar las asignaturas desde Firebase
-  loadAsignaturas() {
+  async loadAsignaturas() {
+    const loading = await this.presentLoading('Cargando asignaturas...');
     this.firebaseService.getAsignaturas().subscribe((data) => {
       this.asignaturasList = data;
+      loading.dismiss(); // Descartar el loading después de cargar las asignaturas
     });
   }
 
@@ -88,6 +97,7 @@ export class AgregarAsignaturaPage implements OnInit {
 
   // Método para inscribirse después de la confirmación
   async confirmInscription() {
+    const loading = await this.presentLoading('Inscribiendo asignaturas...');
     this.afAuth.currentUser.then((user) => {
       if (user) {
         const userId = user.uid;
@@ -97,9 +107,8 @@ export class AgregarAsignaturaPage implements OnInit {
           .then(async () => {
             this.successMessage = `Te has inscrito correctamente a ${this.selectedAsignaturas.length} asignatura(s).`;
             this.selectedAsignaturas = [];  // Limpiar selección
-            
-            // Mostrar alerta de éxito
             await this.presentSuccessAlert();
+            loading.dismiss(); // Descartar el loading después de la inscripción exitosa
           })
           .catch(async (error) => {
             console.error('Error al inscribirse:', error);
@@ -109,6 +118,7 @@ export class AgregarAsignaturaPage implements OnInit {
               buttons: ['OK']
             });
             await alert.present();
+            loading.dismiss(); // Descartar el loading en caso de error
           });
       } else {
         this.alertController.create({
@@ -116,6 +126,7 @@ export class AgregarAsignaturaPage implements OnInit {
           message: 'No se pudo identificar al usuario. Inicia sesión nuevamente.',
           buttons: ['OK']
         }).then(alert => alert.present());
+        loading.dismiss(); // Descartar el loading si no hay usuario
       }
     });
   }
@@ -123,11 +134,20 @@ export class AgregarAsignaturaPage implements OnInit {
   // Método para inscribirse
   inscribirse() {
     if (this.selectedAsignaturas.length > 0) {
-      // Mostrar alerta de confirmación
-      this.presentConfirmationAlert();
+      this.presentConfirmationAlert(); // Mostrar alerta de confirmación
     } else {
-      // Mostrar alerta si no se seleccionaron asignaturas
-      this.presentSelectAsignaturaAlert();
+      this.presentSelectAsignaturaAlert(); // Mostrar alerta si no se seleccionaron asignaturas
     }
+  }
+
+  // Mostrar el indicador de carga
+  async presentLoading(message: string) {
+    const loading = await this.loadingController.create({
+      message: message,
+      spinner: 'circles',  // Estilo del spinner
+      duration: 0 // duración infinita hasta que se oculte manualmente
+    });
+    await loading.present();
+    return loading;
   }
 }

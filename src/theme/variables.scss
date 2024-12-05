@@ -1,2 +1,12 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+:root {
+    --primary-color: #ffd700; /* Amarillo dorado */
+    --secondary-color: #001f3f; /* Azul marino */
+    --background-color: #000000; /* Negro */
+    --text-color: #ffffff; /* Blanco para texto */
+    --card-bg-color: #1a1a1a; /* Gris oscuro para tarjetas */
+    --shadow-color: rgba(255, 255, 255, 0.1); /* Sombra ligera */
+    --ion-color-scheme: light;
+  
+  }

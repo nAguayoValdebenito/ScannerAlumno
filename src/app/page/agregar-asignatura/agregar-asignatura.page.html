@@ -1,10 +1,18 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
     <ion-title>Inscribirse a Asignaturas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="inscripcion-content">
+  <ion-button expand="block" color="secondary" class="volver-button" (click)="navigateToHome()">
+    <ion-icon name="home" slot="end" ></ion-icon>
+    Volver al Home
+  </ion-button>
+
   <ion-card>
     <ion-card-header>
       <ion-card-title>Selecciona las asignaturas</ion-card-title>
@@ -13,17 +21,25 @@
     <ion-card-content>
       <ion-list>
         <ion-item *ngFor="let asignatura of asignaturasList">
-          <ion-label>{{ asignatura.nombreAsignatura }}</ion-label>
           <ion-checkbox 
             slot="start" 
             [checked]="selectedAsignaturas.includes(asignatura.asignaturaId)" 
             (ionChange)="toggleAsignatura(asignatura.asignaturaId)">
           </ion-checkbox>
+          <ion-label>
+            <h3>{{ asignatura.nombreAsignatura }}</h3>
+          </ion-label>
         </ion-item>
       </ion-list>
 
-      <ion-button expand="full" (click)="inscribirse()">Inscribirse</ion-button>
-      <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+      <ion-button expand="block" color="secondary" (click)="inscribirse()">
+        <ion-icon name="book" slot="end" ></ion-icon>
+        Inscribirse
+      </ion-button>
+
+      <ion-text *ngIf="successMessage" color="success" class="success-message">
+        <p>{{ successMessage }}</p>
+      </ion-text>
     </ion-card-content>
   </ion-card>
 </ion-content>

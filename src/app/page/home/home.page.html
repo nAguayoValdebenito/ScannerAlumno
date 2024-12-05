@@ -1,23 +1,17 @@
-<ion-content>
-  <!-- Botón Cerrar Sesión -->
-  <div class="logout-button">
-    <ion-button color="danger" (click)="logout()" fill="clear">
-      Cerrar sesión
-    </ion-button>
-  </div>
-  
-<div class="ion-padding div-avatar">
-  <div class="nombre-avatar">
-    <p>Alumno Duoc UC</p>
-  </div>
-</div>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Alumno Duoc UC</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-<ion-content>
-
-  <!-- Tarjeta con acceso a la página de asistencia -->
-  <ion-card button routerLink="/alumno">
+<ion-content [class.blurred]="isLoading" class="alumno-content">
+  <!-- Contenido principal -->
+  <ion-card button routerLink="/alumno" class="action-card">
     <ion-card-header>
-      <ion-card-title>Asistencia</ion-card-title>
+      <ion-card-title color="light">Asistencia</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       Ver Asistencia 
@@ -25,9 +19,9 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card button routerLink="/agregar-asignatura">
+  <ion-card button routerLink="/agregar-asignatura" class="action-card">
     <ion-card-header>
-      <ion-card-title>Asignaturas</ion-card-title>
+      <ion-card-title color="light">Asignaturas</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       Agregar Asignatura 
@@ -35,17 +29,17 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Card para el escaneo de QR -->
-  <ion-card class="scan-card">
-    <ion-button expand="block" class="scan-button" (click)="startScan()">
-      <ion-card-header>
-        <ion-card-title>Scanear Código QR</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <!-- Icono de QR -->
-        <ion-icon name="qr-code-outline" color="light" size="large"></ion-icon>
-      </ion-card-content>
+  <ion-card class="ion-padding">
+    <ion-button color="tertiary" expand="block" class="scan-button" (click)="startScan()">
+      <ion-card-title color="light">Scanear Código QR</ion-card-title>
+      <ion-icon class="ion-padding" name="qr-code-outline" color="light" size="large"></ion-icon>
     </ion-button>
-  </ion-card>
 
+    <ion-item class="result" *ngIf="scanResult" lines="none">
+      <ion-label>
+        <p>Resultado Scaneo</p>
+        <div>{{scanResult}}</div>
+      </ion-label>
+    </ion-item>
+  </ion-card>
 </ion-content>

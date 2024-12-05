@@ -1,122 +1,106 @@
-.scan-bars {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border: 6px solid transparent;
-  border-top: 6px solid #ff00ff;
-  animation: scanning 2s infinite linear;
-  z-index: 10;
+:host {
+  --primary-color: #0a74da;
+  --secondary-color: #005bb1;
+  --background-color: #f4f4f4;
 }
 
-@keyframes scanning {
-  0% {
-    transform: rotate(0deg);
-    border-top-color: #ff00ff;
-  }
-  25% {
-    transform: rotate(90deg);
-    border-top-color: transparent;
-    border-right-color: #ff00ff;
-  }
-  50% {
-    transform: rotate(180deg);
-    border-right-color: transparent;
-    border-bottom-color: #ff00ff;
-  }
-  75% {
-    transform: rotate(270deg);
-    border-bottom-color: transparent;
-    border-left-color: #ff00ff;
-  }
-  100% {
-    transform: rotate(360deg);
-    border-left-color: transparent;
-    border-top-color: #ff00ff;
+.alumno-content {
+  &.blurred {
+    filter: blur(8px); /* Aplica un desenfoque al contenido */
+    pointer-events: none; /* Deshabilita las interacciones */
+    opacity: 0.5; /* Reduce la opacidad */
   }
 }
 
 ion-header {
-  background: #2575fc;
-  color: white;
-}
-
-.nombre-avatar {
-  p {
-    font-size: 12px;
-    color: rgba(165, 165, 165, 0.933);
-    margin-top: -10px;
+  ion-toolbar {
+    --background: var(--primary-color);
+    --color: #ffffff;
+    
+    ion-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
   }
 }
 
-ion-card {
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
-  color: #fff;
-}
+.alumno-content {
+  background: var(--background-color);
+  padding: 20px;
 
-ion-title {
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  flex-grow: 1;
-}
+  .action-card {
+    margin-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    
+    ion-card-header {
+      background: var(--secondary-color);
+      color: white;
+      border-radius: 15px 15px 0 0;
+      padding: 15px;
+    }
 
-ion-card-title {
-  color: #fff;
-  font-size: 20px;
-  font-weight: bold;
-}
+    ion-card-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      
+      ion-icon {
+        font-size: 1.5rem;
+      }
+    }
+  }
 
-ion-card-content {
-  font-size: 15px;
-}
+  .scan-card {
+    margin-top: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    
+    ion-button {
+      background: var(--primary-color);
+      color: white;
+      font-weight: bold;
+      padding: 15px;
+      border-radius: 15px;
+    }
 
-.icon-asistencia {
-  font-size: 20px;
-}
+    ion-card-header {
+      background: var(--primary-color);
+      color: white;
+      padding: 15px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
 
-.div-avatar {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
+    ion-card-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
 
-/* Estilo para el ion-button que imita el ion-card */
-ion-button {
-  --background: transparent;
-  --border-radius: 20px;
-  --box-shadow: none;
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  text-transform: none; /* Evitar mayúsculas */
-}
+      ion-icon {
+        font-size: 3rem;
+      }
+    }
+  }
 
-ion-button .scan-card {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
-  color: #fff;
-  border-radius: 20px;
-  text-align: center;
-}
+  .result {
+    margin-top: 20px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
 
-ion-button .scan-card ion-card-header {
-  display: flex;
-  justify-content: center;
-  text-align: center;
-}
+    ion-label {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #333;
+    }
 
-ion-button .scan-card ion-card-title {
-  color: #fff;
-  font-size: 20px;
-  font-weight: bold;
+    div {
+      margin-top: 5px;
+      font-size: 1.1rem;
+      color: #333;
+    }
+  }
 }

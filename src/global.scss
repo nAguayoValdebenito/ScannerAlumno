@@ -40,3 +40,13 @@
     margin-left: 5px;
     font-size: 20px;
   }
+
+ion-menu {
+  --background: #ffffff;
+  --width: 250px; /* Ancho del sidebar */
+}
+
+ion-menu-button {
+  --color: #000000; /* Color del botón */
+}
+  

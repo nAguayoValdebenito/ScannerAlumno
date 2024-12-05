@@ -1,20 +1,31 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <!-- Botón para abrir el menú -->
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
     <ion-title>Asignaturas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<!-- Aplica desenfoque si está cargando -->
+<ion-content class="asignaturas-content" [class.blurred]="isLoading">
+    <!-- Botón para regresar al Home -->
+    <ion-button expand="block" color="secondary" class="volver-button" (click)="navigateToHome()">
+      Volver al Home
+    </ion-button>
   <!-- Botón para abrir el modal -->
-  <ion-button expand="full" (click)="openModal()">Agregar Asignatura</ion-button>
+  <ion-button expand="block" color="secondary" (click)="openModal()">
+    Agregar Asignatura
+  </ion-button>
 
   <!-- Lista de asignaturas registradas -->
-  <ion-list>
+  <ion-list *ngIf="!isLoading">
     <ion-item *ngFor="let asignatura of asignaturasList">
       <ion-label>
         <h2>{{ asignatura.nombreAsignatura }}</h2>
-        <p>Horario: {{ asignatura.horarioAsignatura }}</p>
-        <p>Cupos: {{ asignatura.cuposAsignatura }}</p>
+        <p><strong>Horario:</strong> {{ asignatura.horarioAsignatura }}</p>
+        <p><strong>Cupos:</strong> {{ asignatura.cuposAsignatura }}</p>
       </ion-label>
     </ion-item>
   </ion-list>
@@ -23,23 +34,22 @@
   <ion-modal [isOpen]="isModalOpen" (didDismiss)="loadAsignaturas()">
     <ng-template>
       <ion-header>
-        <ion-toolbar>
+        <ion-toolbar color="secondary">
           <ion-title>Agregar Asignatura</ion-title>
           <ion-buttons slot="end">
-            <!-- Botón para cerrar el modal -->
             <ion-button (click)="closeModal()">Cerrar</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      
-      <ion-content>
+
+      <ion-content class="modal-content">
         <!-- Formulario dentro del modal -->
         <form (ngSubmit)="addAsignatura()">
           <ion-item>
             <ion-label position="floating">Nombre de la Asignatura</ion-label>
             <ion-input [(ngModel)]="asignatura.nombreAsignatura" name="nombreAsignatura" required></ion-input>
           </ion-item>
-          
+
           <ion-item>
             <ion-label position="floating">Horario</ion-label>
             <ion-input [(ngModel)]="asignatura.horarioAsignatura" name="horarioAsignatura" required></ion-input>
@@ -50,14 +60,16 @@
             <ion-input type="number" [(ngModel)]="asignatura.cuposAsignatura" name="cuposAsignatura" required></ion-input>
           </ion-item>
 
-          <ion-button expand="full" type="submit">Agregar Asignatura</ion-button>
+          <ion-button expand="block" color="primary" type="submit">
+            Agregar Asignatura
+          </ion-button>
         </form>
       </ion-content>
     </ng-template>
   </ion-modal>
 
   <!-- Generar Código QR -->
-  <ion-card>
+  <ion-card *ngIf="!isLoading">
     <ion-card-header>
       <ion-card-title>Generar Código QR</ion-card-title>
     </ion-card-header>
@@ -74,14 +86,13 @@
           </ion-select-option>
         </ion-select>
       </ion-item>
-     
-      <!-- Mostrar el código QR generado -->
-     
     </ion-card-content>
   </ion-card>
-  <ion-card class="ion-padding">
+
+  <!-- Mostrar Código QR Generado -->
+  <ion-card class="qr-card" *ngIf="!isLoading">
     <div *ngIf="qrCodeUrl" class="codigoqr">
-      <qr-code [value]="qrCodeUrl" size="300" errorCorrectionLevel="M"></qr-code>
+      <qr-code [value]="qrCodeUrl" size="200" errorCorrectionLevel="M"></qr-code>
     </div>
   </ion-card>
 </ion-content>
