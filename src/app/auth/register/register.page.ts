@@ -114,6 +114,7 @@ export class RegisterPage implements OnInit {
         this.utilsService.saveInLocalStorage('userRole', this.usr.role);
   
         // Redirigir al login o al área correspondiente
+        await this.presentAlert('Registro Exitoso', 'Se pudo registrar exitosamente.');
         this.router.navigate(['/login']); // o alguna ruta de éxito
       } else {
         throw new Error('No se pudo obtener el ID del usuario');
