@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Asignaturas } from 'src/app/interfaces/asignaturas';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import { QrCodeService } from 'src/app/services/qrcode.service'; // Asegúrate de importar el servicio del QR
+import { QrCodeService } from 'src/app/services/qrcode.service';
+import { AlertController } from '@ionic/angular'; // Importamos AlertController
 
 @Component({
   selector: 'app-asignaturas-docente',
@@ -18,7 +19,8 @@ export class AsignaturasDocentePage implements OnInit {
 
   constructor(
     private firebaseService: FirebaseService,
-    private qrCodeService: QrCodeService  // Injecta el servicio para generar el código QR
+    private qrCodeService: QrCodeService,
+    private alertController: AlertController // Inyectamos AlertController
   ) { }
 
   ngOnInit() {
@@ -35,46 +37,91 @@ export class AsignaturasDocentePage implements OnInit {
     this.isModalOpen = false;
   }
 
-  // Método para agregar una asignatura
-  async addAsignatura() {
-    if (this.asignatura.nombreAsignatura && this.asignatura.horarioAsignatura && this.asignatura.cuposAsignatura) {
-      try {
-        // Crear un objeto con los datos de la asignatura
-        const asignaturaData = {
-          asignaturaId: this.asignatura.asignaturaId, 
-          nombreAsignatura: this.asignatura.nombreAsignatura,
-          horarioAsignatura: this.asignatura.horarioAsignatura,
-          cuposAsignatura: this.asignatura.cuposAsignatura
-        };
-  
-        // Agregar la asignatura a Firebase
-        await this.firebaseService.addAsignatura(asignaturaData);
-        
-  
-        // Actualizar el objeto de la asignatura con el ID de Firebase
-        const asignaturaConId = {
-          ...asignaturaData,
-          asignaturaId: asignaturaData.asignaturaId
-        };
-  
-        // Recargar la lista de asignaturas después de agregar
-        await this.loadAsignaturas();
-  
-        // Limpiar el formulario
-        this.clearForm();
-  
-        // Cerrar el modal
-        this.closeModal();
-  
-        console.log('Asignatura agregada correctamente', asignaturaConId);
-      } catch (error) {
-        console.error("Error al agregar asignatura: ", error);
-      }
-    } else {
-      alert("Por favor, complete todos los campos.");
+  // Alerta: Campos incompletos
+  async presentIncompleteFieldsAlert() {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: 'Completa todos los campos.',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  // Alerta: Asignatura creada con éxito
+  async presentSuccessAlert() {
+    const alert = await this.alertController.create({
+      header: 'Éxito',
+      message: 'Asignatura creada con éxito.',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  // Alerta: Confirmación antes de crear la asignatura
+  async presentConfirmationAlert() {
+    const alert = await this.alertController.create({
+      header: 'Confirmación',
+      message: '¿Estás seguro de querer agregar esta asignatura?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: () => {
+            console.log('Operación cancelada.');
+            this.closeModal(); // Cierra el modal y regresa al HTML
+          }
+        },
+        {
+          text: 'Sí',
+          handler: () => {
+            this.confirmAddAsignatura(); // Llama al método para agregar la asignatura
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  // Método para agregar una asignatura después de la confirmación
+  async confirmAddAsignatura() {
+    try {
+      const asignaturaData = {
+        asignaturaId: this.asignatura.asignaturaId, 
+        nombreAsignatura: this.asignatura.nombreAsignatura,
+        horarioAsignatura: this.asignatura.horarioAsignatura,
+        cuposAsignatura: this.asignatura.cuposAsignatura
+      };
+
+      await this.firebaseService.addAsignatura(asignaturaData);
+
+      // Recargar la lista de asignaturas después de agregar
+      await this.loadAsignaturas();
+
+      // Limpiar el formulario
+      this.clearForm();
+
+      // Cerrar el modal
+      this.closeModal();
+
+      console.log('Asignatura agregada correctamente', asignaturaData);
+
+      // Mostrar alerta de éxito
+      await this.presentSuccessAlert();
+    } catch (error) {
+      console.error("Error al agregar asignatura: ", error);
     }
   }
-  
+
+  // Método para agregar una asignatura con confirmación
+  async addAsignatura() {
+    if (this.asignatura.nombreAsignatura && this.asignatura.horarioAsignatura && this.asignatura.cuposAsignatura) {
+      // Mostrar alerta de confirmación
+      await this.presentConfirmationAlert();
+    } else {
+      // Mostrar alerta de campos incompletos
+      await this.presentIncompleteFieldsAlert();
+    }
+  }
 
   // Método para cargar las asignaturas desde Firebase
   loadAsignaturas() {
@@ -89,13 +136,10 @@ export class AsignaturasDocentePage implements OnInit {
   }
 
   // Método para generar el código QR
- generateQRCode(asignaturaId: string) {
-  console.log("ID proporcionado:", asignaturaId);
-  const qrData = `id: ${asignaturaId}`;
-      this.qrCodeUrl = qrData;
-      console.log("Datos del QR:", qrData);
- 
- };
+  generateQRCode(asignaturaId: string) {
+    console.log("ID proporcionado:", asignaturaId);
+    const qrData = `id: ${asignaturaId}`;
+    this.qrCodeUrl = qrData;
+    console.log("Datos del QR:", qrData);
+  }
 }
-
-

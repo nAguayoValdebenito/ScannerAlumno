@@ -13,6 +13,12 @@
 </div>
 
 <ion-content>
+    <!-- Botón Cerrar Sesión -->
+<div class="logout-button">
+  <ion-button color="danger" (click)="logout()" fill="clear">
+    Cerrar sesión
+  </ion-button>
+</div>
   <!-- Solo se deja el botón de Asignaturas -->
   <ion-card button (click)="navigateToAsignaturas()">
     <ion-card-header>

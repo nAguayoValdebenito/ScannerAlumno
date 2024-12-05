@@ -5,6 +5,7 @@ import { Users } from 'src/app/interfaces/users';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Asignaturas } from 'src/app/interfaces/asignaturas';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-register',
@@ -33,7 +34,9 @@ export class RegisterPage implements OnInit {
 
   isProfesor: boolean = false; // Controla la visibilidad del campo de departamento
 
-  constructor(private auths: FirebaseService, private router: Router, private AFAuth: AngularFireAuth, private firestore: AngularFirestore) { }
+  constructor(private auths: FirebaseService, private router: Router, private AFAuth: AngularFireAuth, private firestore: AngularFirestore,
+    private utilsService: UtilsService  // Inyectamos UtilsService
+  ) { }
 
   ngOnInit() { }
 
@@ -56,6 +59,14 @@ export class RegisterPage implements OnInit {
 
   async registrarUsuario() {
     try {
+        // Asignar el rol según el dominio del correo
+        if (this.usr.email.endsWith('@alumnoduoc.cl')) {
+          this.usr.role = 'alumno';
+        } else if (this.usr.email.endsWith('@profesorduoc.cl')) {
+          this.usr.role = 'profesor';
+        } else {
+          throw new Error('Correo electrónico no válido');
+        }
       // Crear usuario en Firebase Authentication
       const credencial = await this.AFAuth.createUserWithEmailAndPassword(this.usr.email, this.usr.password);
       
@@ -74,6 +85,11 @@ export class RegisterPage implements OnInit {
         // Guardar el usuario en Firestore
         await this.firestore.collection('usuarios').doc(userId).set(datoUsuario);
         console.log('Usuario registrado exitosamente');
+
+        //Guardar en la LocalStorage
+        this.utilsService.saveInLocalStorage('userEmail', this.usr.email);
+        this.utilsService.saveInLocalStorage('userRole', this.usr.role);
+
         // Redirigir al login o al área correspondiente
         this.router.navigate(['/login']); // o alguna ruta de éxito
       } else {

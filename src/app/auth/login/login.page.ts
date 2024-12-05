@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Users } from 'src/app/interfaces/users';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,11 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 })
 export class LoginPage implements OnInit {
 
-  constructor(private auths: FirebaseService, private router: Router) { }
+  constructor(
+    private auths: FirebaseService, 
+    private router: Router,
+    private alertController: AlertController // Inyectamos AlertController
+  ) { }
 
   usr: Users = {
     id: Date.now().toString(),
@@ -18,28 +23,40 @@ export class LoginPage implements OnInit {
     email: "",
     password: '',
     role: '',
-    asignaturas:[],
-    porcentaje:''
-  }
+    asignaturas: [],
+    porcentaje: ''
+  };
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Error de Autenticación',
+      message: 'Las credenciales son Incorrectas.',
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 
   login() {
-    this.auths.login(this.usr.email, this.usr.password).then(() => {
-      console.log('Usuario logeado');
-
-      // Comprobar el dominio del correo y redirigir
-      if (this.usr.email.endsWith('@alumnoduoc.cl')) {
-        console.log('Alumno logeado');
-        this.router.navigate(['/home']);  // Redirige a home.page.html
-      } else if (this.usr.email.endsWith('@profesorduoc.cl')) {
-        console.log('Docente logeado');
-        this.router.navigate(['/docente']);  // Redirige a docente.page.html
-      }
-    }).catch((e) => {
-      console.log('Error al iniciar sesión', e);
-    });
+    this.auths.login(this.usr.email, this.usr.password)
+      .then(() => {
+        console.log('Usuario logeado');
+        
+        // Redirección según el dominio del correo
+        if (this.usr.email.endsWith('@alumnoduoc.cl')) {
+          console.log('Alumno logeado');
+          this.router.navigate(['/home']);
+        } else if (this.usr.email.endsWith('@profesorduoc.cl')) {
+          console.log('Docente logeado');
+          this.router.navigate(['/docente']);
+        }
+      })
+      .catch(async (e) => {
+        console.error('Error al iniciar sesión', e);
+        // Mostrar la alerta si las credenciales son incorrectas
+        await this.presentAlert();
+      });
   }
-
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Asignaturas } from 'src/app/interfaces/asignaturas';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AlertController } from '@ionic/angular'; // Importamos AlertController
 
 @Component({
   selector: 'app-agregar-asignatura',
@@ -14,7 +15,11 @@ export class AgregarAsignaturaPage implements OnInit {
   selectedAsignaturas: string[] = []; // Lista de IDs de asignaturas seleccionadas
   successMessage = ''; // Mensaje de éxito
 
-  constructor(private firebaseService: FirebaseService,private afAuth: AngularFireAuth) {}
+  constructor(
+    private firebaseService: FirebaseService,
+    private afAuth: AngularFireAuth,
+    private alertController: AlertController // Inyectamos AlertController
+  ) {}
 
   ngOnInit() {
     this.loadAsignaturas(); // Cargar las asignaturas al iniciar
@@ -37,31 +42,92 @@ export class AgregarAsignaturaPage implements OnInit {
     }
   }
 
+  // Alerta: Debes seleccionar una asignatura
+  async presentSelectAsignaturaAlert() {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: 'Debes seleccionar una asignatura.',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  // Alerta: Asignatura inscrita con éxito
+  async presentSuccessAlert() {
+    const alert = await this.alertController.create({
+      header: 'Éxito',
+      message: 'Asignatura inscrita con éxito.',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  // Alerta: Confirmación antes de inscribirse
+  async presentConfirmationAlert() {
+    const alert = await this.alertController.create({
+      header: 'Confirmación',
+      message: '¿Estás seguro de querer inscribir la(s) asignatura(s)?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: () => {
+            console.log('Inscripción cancelada.');
+          }
+        },
+        {
+          text: 'Sí',
+          handler: () => {
+            this.confirmInscription();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  // Método para inscribirse después de la confirmación
+  async confirmInscription() {
+    this.afAuth.currentUser.then((user) => {
+      if (user) {
+        const userId = user.uid;
+
+        // Inscribir las asignaturas seleccionadas
+        this.firebaseService.inscribirAsignaturas(userId, this.selectedAsignaturas)
+          .then(async () => {
+            this.successMessage = `Te has inscrito correctamente a ${this.selectedAsignaturas.length} asignatura(s).`;
+            this.selectedAsignaturas = [];  // Limpiar selección
+            
+            // Mostrar alerta de éxito
+            await this.presentSuccessAlert();
+          })
+          .catch(async (error) => {
+            console.error('Error al inscribirse:', error);
+            const alert = await this.alertController.create({
+              header: 'Error',
+              message: 'Hubo un problema al inscribirse. Inténtalo nuevamente.',
+              buttons: ['OK']
+            });
+            await alert.present();
+          });
+      } else {
+        this.alertController.create({
+          header: 'Error',
+          message: 'No se pudo identificar al usuario. Inicia sesión nuevamente.',
+          buttons: ['OK']
+        }).then(alert => alert.present());
+      }
+    });
+  }
+
+  // Método para inscribirse
   inscribirse() {
     if (this.selectedAsignaturas.length > 0) {
-      this.afAuth.currentUser.then((user) => {
-        if (user) {
-          const userId = user.uid;
-  
-          // Inscribir las asignaturas seleccionadas
-          this.firebaseService.inscribirAsignaturas(userId, this.selectedAsignaturas)
-            .then(() => {
-              this.successMessage = `Te has inscrito correctamente a ${this.selectedAsignaturas.length} asignatura(s).`;
-              this.selectedAsignaturas = [];  // Limpiar selección
-            })
-            .catch((error) => {
-              console.error('Error al inscribirse:', error);
-              alert('Hubo un problema al inscribirse. Inténtalo nuevamente.');
-            });
-        } else {
-          alert('No se pudo identificar al usuario. Inicia sesión nuevamente.');
-        }
-      });
+      // Mostrar alerta de confirmación
+      this.presentConfirmationAlert();
     } else {
-      alert('Por favor, selecciona al menos una asignatura.');
+      // Mostrar alerta si no se seleccionaron asignaturas
+      this.presentSelectAsignaturaAlert();
     }
   }
-  
-  
-  
 }

@@ -12,10 +12,8 @@ import { Router } from '@angular/router';  // Importar Router para navegación
 })
 export class HomePage implements OnInit {
 
-  temperature: number | null = null;
-  city: string = 'concepción, Chile';
-  errorMessage: string = '';
-  scanResult: string = '';
+  scanResult: '';
+  segment= 'scan';
 
   constructor(
     private http: HttpClient, 
@@ -52,6 +50,6 @@ export class HomePage implements OnInit {
     }
 
   ngOnInit() {
-
+    
   }
 }
