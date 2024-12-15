@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <!-- Botón para abrir el menú -->
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Listado Alumnos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-button expand="block" color="secondary" class="volver-button" (click)="navigateToHome()">
+    Volver al Home
+  </ion-button>
+
+  <ion-accordion-group>
+    <ion-accordion *ngFor="let item of asignaturasConUsuarios">
+      <ion-item slot="header" color="light">
+        <ion-label>{{ item.asignatura.nombreAsignatura }}</ion-label>
+      </ion-item>
+      <div slot="content">
+        <ion-list *ngIf="item.usuarios.length > 0; else noUsuarios">
+          <ion-item *ngFor="let usuario of item.usuarios">
+            <ion-label>
+              <h2>{{ usuario.email }}</h2>
+              <p>Porcentaje: {{ usuario.porcentaje }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+        <ng-template #noUsuarios>
+          <p>No hay usuarios inscritos en esta asignatura.</p>
+        </ng-template>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+</ion-content>

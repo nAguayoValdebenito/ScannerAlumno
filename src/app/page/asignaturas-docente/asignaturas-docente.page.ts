@@ -157,8 +157,11 @@ export class AsignaturasDocentePage implements OnInit {
   // Método para generar el código QR
   generateQRCode(asignaturaId: string) {
     console.log("ID proporcionado:", asignaturaId);
-    const qrData = `id: ${asignaturaId}`;
-    this.qrCodeUrl = qrData;
+    
+    // Generar datos en formato JSON
+    const qrData = JSON.stringify({ idAsignatura: asignaturaId });
+    
+    this.qrCodeUrl = qrData; // Ahora la URL del QR contiene una cadena JSON
     console.log("Datos del QR:", qrData);
   }
 }

@@ -99,7 +99,7 @@ export class RegisterPage implements OnInit {
           id: userId,
           usuario: this.usr.usuario,
           email: this.usr.email,
-          password: this.usr.password, // Mejor no guardar la contraseña en Firestore por seguridad
+          password: this.usr.password,
           role: this.usr.role,
           asignaturas: this.usr.asignaturas,
           porcentaje: this.usr.porcentaje
@@ -109,9 +109,12 @@ export class RegisterPage implements OnInit {
         await this.firestore.collection('usuarios').doc(userId).set(datoUsuario);
         console.log('Usuario registrado exitosamente');
   
-        // Guardar en la LocalStorage
+        // Guardar los datos del usuario en localStorage
         this.utilsService.saveInLocalStorage('userEmail', this.usr.email);
         this.utilsService.saveInLocalStorage('userRole', this.usr.role);
+        this.utilsService.saveInLocalStorage('userId', userId);
+        this.utilsService.saveInLocalStorage('userAsignaturas', this.usr.asignaturas);
+        this.utilsService.saveInLocalStorage('userPorcentaje', this.usr.porcentaje);
   
         // Redirigir al login o al área correspondiente
         await this.presentAlert('Registro Exitoso', 'Se pudo registrar exitosamente.');
@@ -124,6 +127,7 @@ export class RegisterPage implements OnInit {
       await this.presentAlert('Error en el Registro', 'Hubo un problema al registrar el usuario. Intente nuevamente.');
     }
   }
+  
   
   
 }

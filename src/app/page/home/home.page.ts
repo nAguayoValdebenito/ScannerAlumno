@@ -6,6 +6,7 @@ import { LensFacing } from '@capacitor-mlkit/barcode-scanning';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/services/utils.service';
 import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
+import { FirebaseService } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-home',
@@ -18,11 +19,9 @@ export class HomePage implements OnInit {
   isLoading = true; // Variable para controlar el estado de carga
 
   constructor(
-    private http: HttpClient,
-    private modalController: ModalController,
     private router: Router,
     private utilsService: UtilsService,
-    private alertController: AlertController
+    private firebaseService: FirebaseService
   ) {}
 
 async startScan() {
@@ -62,18 +61,26 @@ private async processQRCode(rawValue: string) {
   let qrData;
 
   try {
-    // Intentar parsear el QR como JSON
     qrData = JSON.parse(rawValue);
   } catch (parseError) {
     console.error('Error al parsear el QR:', parseError);
-    alert('Qr Invalido');
+    alert('QR inválido');
     return;
   }
 
-  console.log('Datos del QR procesados:', qrData);
+  const asignaturaId = qrData.idAsignatura;
 
-  this.router.navigate(['/home'], { queryParams: { scanData: JSON.stringify(qrData) } });
+  try {
+    // Recuperar el usuario logueado
+    const loggedUser = await this.utilsService.getLoggedUser();
+    await this.firebaseService.updateUserAttendance(loggedUser.id, asignaturaId, 10);
+    alert('Porcentaje de asistencia actualizado.');
+  } catch (error) {
+    console.error('Error al procesar QR:', error);
+    alert('Error al actualizar asistencia.');
+  }
 }
+
 
 
 

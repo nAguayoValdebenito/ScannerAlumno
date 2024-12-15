@@ -36,4 +36,8 @@ export class DocentePage implements OnInit {
   navigateToAsignaturas() {
     this.router.navigate(['/asignaturas-docente']);
   }
+
+  navigateToLista() {
+    this.router.navigate(['/lista-alumnos']);
+  }
 }

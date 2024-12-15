@@ -1,7 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <!-- Botón para abrir el menú -->
       <ion-menu-button menu="main-menu"></ion-menu-button>
     </ion-buttons>
     <ion-title>Asignaturas Inscritas</ion-title>
@@ -11,7 +10,7 @@
 <ion-content [ngClass]="{'blurred': isLoading}" class="asignaturas-content">
   <!-- Botón para regresar al Home -->
   <ion-button expand="block" color="secondary" class="volver-button" (click)="navigateToHome()">
-    <ion-icon name="home" slot="end" ></ion-icon>
+    <ion-icon name="home" slot="end"></ion-icon>
     Volver al Home
   </ion-button>
 
@@ -31,7 +30,7 @@
       </ion-card-header>
       <ion-card-content>
         <p><strong>Horario:</strong> {{ asignatura.horarioAsignatura }}</p>
-        <p><strong>Cupos:</strong> {{ asignatura.cuposAsignatura }}</p>
+        <p><strong>Asistencia:</strong> {{ asignatura.porcentajeAsistencia }}%</p>
       </ion-card-content>
     </ion-card>
   </ion-list>

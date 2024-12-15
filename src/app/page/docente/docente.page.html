@@ -30,4 +30,18 @@
       </div>
     </ion-card-content>
   </ion-card>
+
+  <!-- Botón para ver asignaturas -->
+  <ion-card button (click)="navigateToLista()" class="asignaturas-card">
+    <ion-card-header>
+      <ion-card-title>Listado de Alumnos</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="card-content">
+        Ver Listado
+        <ion-icon slot="end" class="icon-asignaturas" color="success" name="bookmark"></ion-icon>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
